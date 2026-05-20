@@ -1,3 +1,24 @@
 spring:
   application:
     name: casoitx
+  datasource:
+    url: jdbc:h2:mem:itxdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+  flyway:
+    enable: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+    validate-on-migrate: true
