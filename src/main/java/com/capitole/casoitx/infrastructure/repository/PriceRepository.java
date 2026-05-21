@@ -12,10 +12,10 @@ import java.util.Optional;
 @Repository
 public interface PriceRepository extends JpaRepository<PriceEntity, Long> {
 
-    @Query(value = "SELECT p FROM PRICES p WHERE p.PRODUCT_ID = :productId AND p.BRAND_ID = :brandId AND :applicationDate BETWEEN p.START_DATE AND p.END_DATE ORDER BY p.PRIORITY DESC LIMIT 1", nativeQuery = true)
-    Optional<PriceEntity> findApplicablePrice(
-            @Param("applicationDate") LocalDateTime applicationDate,
-            @Param("productId") Long productId,
-            @Param("brandId") Long brandId
+    Optional<PriceEntity> findFirstByProductIdAndBrandIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(
+            Long productId,
+            Long brandId,
+            LocalDateTime applicationDateStart,
+            LocalDateTime applicationDateEnd
     );
 }

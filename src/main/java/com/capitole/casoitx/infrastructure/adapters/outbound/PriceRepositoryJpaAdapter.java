@@ -20,11 +20,13 @@ public class PriceRepositoryJpaAdapter implements PriceRepositoryPort {
 
     @Override
     public Optional<Price> findApplicablePrice(LocalDateTime applicationDate, Long productId, Long brandId) {
-        return priceRepository.findApplicablePrice(applicationDate, productId, brandId)
-                .map(this::toDomain);
+        return priceRepository
+                .findFirstByProductIdAndBrandIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(
+                        productId, brandId, applicationDate, applicationDate)
+                .map(this::toPriceDomain);
     }
 
-    private Price toDomain(PriceEntity entity) {
+    private Price toPriceDomain(PriceEntity entity) {
         return Price.builder()
             .id(entity.getId())
             .brandId(entity.getBrandId())
