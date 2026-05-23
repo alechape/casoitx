@@ -15,7 +15,7 @@ spring:
     hibernate:
       ddl-auto: none
     defer-datasource-initialization: true
-    show-sql: true
+    show-sql: false
     properties:
       hibernate.format_sql: true
   flyway:

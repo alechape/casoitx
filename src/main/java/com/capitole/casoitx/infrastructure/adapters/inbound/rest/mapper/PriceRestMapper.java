@@ -9,14 +9,13 @@ public class PriceRestMapper {
 
     public PriceFindResponse toPriceFindResponse(Price price) {
 
-        return PriceFindResponse.builder()
+        return new PriceFindResponse()
                 .productId(price.getProductId())
                 .brandId(price.getBrandId())
                 .priceList(price.getPriceList())
                 .startDate(price.getStartDate())
                 .endDate(price.getEndDate())
-                .price(price.getPrice())
-                .curr(price.getCurr())
-                .build();
+                .price(price.getPrice().doubleValue())
+                .curr(price.getCurr());
     }
 }

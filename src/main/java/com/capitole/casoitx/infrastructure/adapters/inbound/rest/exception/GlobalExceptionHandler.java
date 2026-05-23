@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
@@ -21,24 +22,22 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handlePriceNotFound(
             PriceNotFoundException ex, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(ApiErrorResponse.builder()
+                .body(new ApiErrorResponse()
                         .status(HttpStatus.NOT_FOUND.value())
                         .message(ex.getMessage())
                         .path(request.getRequestURI())
-                        .timestamp(LocalDateTime.now())
-                        .build());
+                        .timestamp(LocalDateTime.now()));
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ApiErrorResponse> handleBadRequest(
             BadRequestException ex, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiErrorResponse.builder()
+                .body(new ApiErrorResponse()
                         .status(HttpStatus.BAD_REQUEST.value())
                         .message(ex.getMessage())
                         .path(request.getRequestURI())
-                        .timestamp(LocalDateTime.now())
-                        .build());
+                        .timestamp(LocalDateTime.now()));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -54,12 +53,11 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining(", "));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiErrorResponse.builder()
+                .body(new ApiErrorResponse()
                         .status(HttpStatus.BAD_REQUEST.value())
                         .message(message)
                         .path(request.getRequestURI())
-                        .timestamp(LocalDateTime.now())
-                        .build());
+                        .timestamp(LocalDateTime.now()));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -70,23 +68,36 @@ public class GlobalExceptionHandler {
                 ex.getParameterName(), ex.getParameterType());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiErrorResponse.builder()
+                .body(new ApiErrorResponse()
                         .status(HttpStatus.BAD_REQUEST.value())
                         .message(message)
                         .path(request.getRequestURI())
-                        .timestamp(LocalDateTime.now())
-                        .build());
+                        .timestamp(LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiErrorResponse> handleTypeMismatch(
+            org.springframework.web.method.annotation.MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
+
+        String message = String.format("El parámetro '%s' tiene un valor inválido: '%s'",
+                ex.getName(), ex.getValue());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiErrorResponse()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .message(message)
+                        .path(request.getRequestURI())
+                        .timestamp(LocalDateTime.now()));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGlobalException(
             Exception ex, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiErrorResponse.builder()
+                .body(new ApiErrorResponse()
                         .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                         .message("Error interno del servidor")
                         .path(request.getRequestURI())
-                        .timestamp(LocalDateTime.now())
-                        .build());
+                        .timestamp(LocalDateTime.now()));
     }
 }

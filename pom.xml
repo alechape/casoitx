@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.capitole</groupId>
 	<artifactId>casoitx</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name/>
 	<description/>
 	<url/>
@@ -30,10 +30,6 @@
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-h2console</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -63,28 +59,62 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webmvc-test</artifactId>
-			<scope>test</scope>
-		</dependency>
         <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <scope>test</scope>
         </dependency>
-	</dependencies>
+        <dependency>
+        	<groupId>org.flywaydb</groupId>
+        	<artifactId>flyway-core</artifactId>
+        </dependency>
+        <dependency>
+        	<groupId>io.swagger.core.v3</groupId>
+        	<artifactId>swagger-annotations</artifactId>
+        	<version>2.2.21</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.openapitools</groupId>
+        	<artifactId>jackson-databind-nullable</artifactId>
+        	<version>0.2.6</version>
+        </dependency>
+        </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
+        <build>
+        <plugins>
+            <plugin>
+        		<groupId>org.openapitools</groupId>
+        		<artifactId>openapi-generator-maven-plugin</artifactId>
+        		<version>7.5.0</version>
+        		<executions>
+        			<execution>
+        				<goals>
+        					<goal>generate</goal>
+        				</goals>
+        				<configuration>
+        					<inputSpec>${project.basedir}/src/main/resources/api.yaml</inputSpec>
+        					<generatorName>spring</generatorName>
+        					<apiPackage>com.capitole.casoitx.infrastructure.adapters.inbound.rest.api</apiPackage>
+        					<modelPackage>com.capitole.casoitx.infrastructure.adapters.inbound.rest.dto</modelPackage>
+        					<configOptions>
+        						<interfaceOnly>true</interfaceOnly>
+        						<useSpringBoot3>true</useSpringBoot3>
+        						<useTags>true</useTags>
+        						<openApiNullable>false</openApiNullable>
+        					</configOptions>
+							<typeMappings>
+								<typeMapping>DateTime=LocalDateTime</typeMapping>
+							</typeMappings>
+							<importMappings>
+								<importMapping>LocalDateTime=java.time.LocalDateTime</importMapping>
+							</importMappings>
+        				</configuration>
+        			</execution>
+        		</executions>
+        	</plugin>
+        	<plugin>
+        		<groupId>org.springframework.boot</groupId>
+        		<artifactId>spring-boot-maven-plugin</artifactId>				<configuration>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -93,42 +123,19 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>default-compile</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-						<configuration>
-							<annotationProcessorPaths>
-								<path>
-									<groupId>org.projectlombok</groupId>
-									<artifactId>lombok</artifactId>
-								</path>
-							</annotationProcessorPaths>
-						</configuration>
-					</execution>
-					<execution>
-						<id>default-testCompile</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>testCompile</goal>
-						</goals>
-						<configuration>
-							<annotationProcessorPaths>
-								<path>
-									<groupId>org.projectlombok</groupId>
-									<artifactId>lombok</artifactId>
-								</path>
-							</annotationProcessorPaths>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.4</version>
+                <configuration>
+                    <reportFormat>plain</reportFormat>
+                    <printSummary>true</printSummary>
+                    <useFile>false</useFile>
+                    <argLine>
+                        -XX:+EnableDynamicAgentLoading
+                    </argLine>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 
