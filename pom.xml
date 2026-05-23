@@ -114,7 +114,8 @@
         	</plugin>
         	<plugin>
         		<groupId>org.springframework.boot</groupId>
-        		<artifactId>spring-boot-maven-plugin</artifactId>				<configuration>
+        		<artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -128,6 +129,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.4</version>
                 <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*IT.java</include>
+                    </includes>
                     <reportFormat>plain</reportFormat>
                     <printSummary>true</printSummary>
                     <useFile>false</useFile>
