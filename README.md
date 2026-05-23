@@ -39,7 +39,7 @@ El proyecto está organizado en tres capas principales:
 
 1.  **Clonar el repositorio:**
     ```bash
-    git clone https://github.com/tu-usuario/casoitx.git
+    git clone https://github.com/alechape/casoitx.git
     cd casoitx
     ```
 
@@ -103,6 +103,10 @@ Busca el precio que debe aplicarse según los criterios de fecha, producto y mar
     "curr": "EUR"
   }
   ```
+
+## Colección de Postman
+
+En la raíz del proyecto se encuentra el archivo `casos_prueba_itx.postman_collection.json`. Este archivo contiene una colección de Postman con los casos de prueba listos para ser importados y ejecutados, permitiendo validar los diferentes escenarios de precios de forma automatizada.
 
 ---
 Desarrollado por [Alexander Echavarría Perez](mailto:alex.echavarria.perez@gmail.com).
